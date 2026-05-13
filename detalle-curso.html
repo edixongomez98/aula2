@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Aula Virtual | Detalle del Curso</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, 'Segoe UI', 'Inter', 'Poppins', -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #000000 0%, #044756 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1300px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .detail-page {
+            background: rgba(255, 255, 255, 0.591);
+            border-radius: 2.5rem;
+            padding: 2rem 2rem 3rem;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 240, 0.7);
+        }
+
+        .detail-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .course-emoji-big {
+            font-size: 5rem;
+            display: block;
+            margin-bottom: 1rem;
+            filter: drop-shadow(2px 4px 8px rgba(0,0,0,0.15));
+        }
+
+        .detail-header h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            background: linear-gradient(120deg, #030b10, #1294db);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .detail-header p {
+            color: #4a627a;
+            margin-top: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .back-cursos {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: #ecf3f97e;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            text-decoration: none;
+            color: #1f4460;
+            font-weight: 500;
+            margin-top: 1rem;
+            transition: all 0.2s;
+            border: 1px solid #cbdde9;
+        }
+
+        .back-cursos:hover {
+            background: #dfe9f2;
+            transform: translateX(-4px);
+        }
+
+        /* SECCIÓN DE UNIDADES - 4 BOTONES GRANDES */
+        .unidades-section {
+            margin: 2rem 0;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(120deg, #030b10, #1294db);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin: 2rem 0 1.5rem;
+            text-align: center;
+        }
+
+        .unidades-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .unidad-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+            border-radius: 1.5rem;
+            padding: 1.8rem 1.2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(18, 148, 219, 0.2);
+            text-decoration: none;
+            display: block;
+        }
+
+        .unidad-card:hover {
+            transform: translateY(-8px);
+            border-color: #1294db;
+            box-shadow: 0 15px 30px -12px rgba(0,0,0,0.2);
+            background: white;
+        }
+
+        .unidad-numero {
+            background: linear-gradient(135deg, #1e3e5c, #2c4863);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .unidad-titulo {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1f3e54;
+            margin-bottom: 0.5rem;
+        }
+
+        .unidad-desc {
+            font-size: 0.85rem;
+            color: #5e7f97;
+            line-height: 1.4;
+        }
+
+        .unidad-icono {
+            font-size: 2rem;
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+
+        /* Info adicional del curso */
+        .course-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: rgba(255,255,255,0.4);
+            border-radius: 1.5rem;
+        }
+
+        .info-item {
+            text-align: center;
+            padding: 0.8rem;
+        }
+
+        .info-label {
+            font-size: 0.75rem;
+            color: #5e7f97;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .info-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1f3e54;
+            margin-top: 0.3rem;
+        }
+
+        .toast-msg {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) scale(0.9);
+            background: #1f3e54e6;
+            backdrop-filter: blur(8px);
+            color: white;
+            padding: 0.8rem 1.8rem;
+            border-radius: 60px;
+            font-weight: 500;
+            font-size: 1rem;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.2s, transform 0.2s;
+            pointer-events: none;
+            box-shadow: 0 6px 14px black;
+            white-space: nowrap;
+        }
+
+        .toast-msg.show {
+            opacity: 1;
+            transform: translateX(-50%) scale(1);
+        }
+
+        @media (max-width: 700px) {
+            body { padding: 1rem; }
+            .detail-header h1 { font-size: 1.8rem; }
+            .section-title { font-size: 1.4rem; }
+            .unidades-grid { grid-template-columns: 1fr; }
+            .toast-msg {
+                white-space: normal;
+                text-align: center;
+                width: 90%;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="detail-page">
+        <div class="detail-header">
+            <span class="course-emoji-big" id="courseEmoji">📚</span>
+            <h1 id="courseTitle">Cargando curso...</h1>
+            <p id="courseDesc">Descripción del curso</p>
+            <a href="cursos.html" class="back-cursos">⬅️ Volver a Cursos</a>
+        </div>
+
+        <!-- Información del curso -->
+        <div class="course-info-grid" id="courseInfo">
+            <!-- Se llena con JS -->
+        </div>
+
+        <!-- SECCIÓN DE 4 UNIDADES -->
+        <h2 class="section-title">📚 Unidades del Curso</h2>
+        <div class="unidades-grid" id="unidadesGrid">
+            <!-- Los 4 botones de unidades se generan con JS -->
+        </div>
+    </div>
+</div>
+
+<div id="toastMessage" class="toast-msg">✨ Mensaje</div>
+
+<script>
+// =============================================
+// DATOS DE CADA CURSO (AHORA CON LOS 7 CURSOS REALES)
+// =============================================
+const cursosDetalle = {
+    1: { // Español y Filosofía
+        title: "Español y Filosofía",
+        emoji: "📖",
+        desc: "Literatura, gramática y pensamiento crítico",
+        duracion: "8 semanas",
+        nivel: "Básico",
+        unidades: [
+            { num: 1, titulo: "Comprensión Lectora", desc: "Semana 1", icono: "📖", link: "unidad1-1.html" },
+            { num: 2, titulo: "Gramática Española", desc: "Semana 2", icono: "✍️", link: "unidad1-2.html" },
+            { num: 3, titulo: "Introducción a la Filosofía", desc: "Semana 3", icono: "💭", link: "unidad1-3.html" },
+            { num: 4, titulo: "Ética y Valores", desc: "Semana 4", icono: "⚖️", link: "unidad1-4.html" }
+        ]
+    },
+    2: { // Matemáticas
+        title: "Matemáticas",
+        emoji: "🧮",
+        desc: "Aritmética, álgebra y razonamiento lógico",
+        duracion: "8 semanas",
+        nivel: "Básico",
+        unidades: [
+            { num: 1, titulo: "Números y Operaciones", desc: "Propiedades y operaciones básicas", icono: "🔢", link: "unidad2-1.html" },
+            { num: 2, titulo: "Álgebra Básica", desc: "Ecuaciones y expresiones", icono: "✖️", link: "unidad2-2.html" },
+            { num: 3, titulo: "Geometría", desc: "Figuras, áreas y perímetros", icono: "📐", link: "unidad2-3.html" },
+            { num: 4, titulo: "Estadística", desc: "Gráficos y medidas de tendencia", icono: "📊", link: "unidad2-4.html" }
+        ]
+    },
+    3: { // Sociales
+        title: "Sociales",
+        emoji: "🌍",
+        desc: "Historia, geografía y cultura general",
+        duracion: "8 semanas",
+        nivel: "Básico",
+        unidades: [
+            { num: 1, titulo: "Historia Universal", desc: "Grandes civilizaciones", icono: "🏛️", link: "unidad3-1.html" },
+            { num: 2, titulo: "Geografía Mundial", desc: "Mapas y regiones del mundo", icono: "🗺️", link: "unidad3-2.html" },
+            { num: 3, titulo: "Historia de Colombia", desc: "Independencia y cultura", icono: "🇨🇴", link: "unidad3-3.html" },
+            { num: 4, titulo: "Democracia y Participación", desc: "Derechos y deberes", icono: "🗳️", link: "unidad3-4.html" }
+        ]
+    },
+    4: { // Física
+        title: "Física",
+        emoji: "⚡",
+        desc: "Movimiento, energía y leyes del universo",
+        duracion: "8 semanas",
+        nivel: "Intermedio",
+        unidades: [
+            { num: 1, titulo: "Cinemática", desc: "Movimiento y velocidad", icono: "🏃", link: "unidad4-1.html" },
+            { num: 2, titulo: "Dinámica", desc: "Fuerzas y leyes de Newton", icono: "⚙️", link: "unidad4-2.html" },
+            { num: 3, titulo: "Energía y Trabajo", desc: "Tipos de energía", icono: "💡", link: "unidad4-3.html" },
+            { num: 4, titulo: "Electricidad Básica", desc: "Circuitos y corriente", icono: "🔌", link: "unidad4-4.html" }
+        ]
+    },
+    5: { // Química
+        title: "Química",
+        emoji: "🧪",
+        desc: "Estructura de la materia y reacciones",
+        duracion: "8 semanas",
+        nivel: "Intermedio",
+        unidades: [
+            { num: 1, titulo: "Estructura Atómica", desc: "Átomos y moléculas", icono: "⚛️", link: "unidad5-1.html" },
+            { num: 2, titulo: "Tabla Periódica", desc: "Elementos y propiedades", icono: "📊", link: "unidad5-2.html" },
+            { num: 3, titulo: "Reacciones Químicas", desc: "Tipos y ecuaciones", icono: "🧪", link: "unidad5-3.html" },
+            { num: 4, titulo: "Química en la Vida", desc: "Aplicaciones cotidianas", icono: "🧴", link: "unidad5-4.html" }
+        ]
+    },
+    6: { // Inglés
+        title: "Inglés",
+        emoji: "🇬🇧",
+        desc: "Vocabulario, gramática y conversación",
+        duracion: "8 semanas",
+        nivel: "Básico",
+        unidades: [
+            { num: 1, titulo: "Greetings & Basics", desc: "Saludos y vocabulario inicial", icono: "👋", link: "unidad6-1.html" },
+            { num: 2, titulo: "Present Simple", desc: "Verbos y oraciones", icono: "📝", link: "unidad6-2.html" },
+            { num: 3, titulo: "Everyday Activities", desc: "Rutinas diarias", icono: "🏠", link: "unidad6-3.html" },
+            { num: 4, titulo: "Travel & Culture", desc: "Viajes y cultura", icono: "✈️", link: "unidad6-4.html" }
+        ]
+    },
+    7: { // Biología
+        title: "Biología",
+        emoji: "🧬",
+        desc: "Células, seres vivos y ecosistemas",
+        duracion: "8 semanas",
+        nivel: "Básico",
+        unidades: [
+            { num: 1, titulo: "La Célula", desc: "Estructura y tipos", icono: "🦠", link: "unidad7-1.html" },
+            { num: 2, titulo: "Reinos de la Naturaleza", desc: "Clasificación de seres vivos", icono: "🌿", link: "unidad7-2.html" },
+            { num: 3, titulo: "Cuerpo Humano", desc: "Sistemas y funciones", icono: "🧠", link: "unidad7-3.html" },
+            { num: 4, titulo: "Ecología", desc: "Ecosistemas y medio ambiente", icono: "🌎", link: "unidad7-4.html" }
+        ]
+    }
+};
+
+// =============================================
+// Leer parámetros de la URL
+// =============================================
+const params = new URLSearchParams(window.location.search);
+const courseId = parseInt(params.get('id')) || 1;
+const curso = cursosDetalle[courseId];
+
+// Rellenar la página con los datos del curso
+if (curso) {
+    document.getElementById('courseEmoji').textContent = curso.emoji;
+    document.getElementById('courseTitle').textContent = curso.title;
+    document.getElementById('courseDesc').textContent = curso.desc;
+    document.title = `Aula Virtual | ${curso.title}`;
+    
+    // Información adicional
+    const infoContainer = document.getElementById('courseInfo');
+    infoContainer.innerHTML = `
+        <div class="info-item"><div class="info-label">📅 Duración</div><div class="info-value">${curso.duracion}</div></div>
+        <div class="info-item"><div class="info-label">📊 Nivel</div><div class="info-value">${curso.nivel}</div></div>
+        <div class="info-item"><div class="info-label">🎓 Certificado</div><div class="info-value">Incluido</div></div>
+        <div class="info-item"><div class="info-label">💻 Modalidad</div><div class="info-value">Virtual</div></div>
+    `;
+    
+    // Generar los 4 botones de unidades
+    const unidadesGrid = document.getElementById('unidadesGrid');
+    if (curso.unidades && curso.unidades.length > 0) {
+        unidadesGrid.innerHTML = curso.unidades.map(unidad => `
+            <a href="${unidad.link}" class="unidad-card">
+                <span class="unidad-icono">${unidad.icono}</span>
+                <div class="unidad-numero">${unidad.num}</div>
+                <div class="unidad-titulo">${unidad.titulo}</div>
+                <div class="unidad-desc">${unidad.desc}</div>
+            </a>
+        `).join('');
+    } else {
+        unidadesGrid.innerHTML = '<p style="text-align:center; grid-column:1/-1;">Unidades en construcción 🚧</p>';
+    }
+}
+
+// =============================================
+// Sistema de Toast
+// =============================================
+let toastTimeout = null;
+function showToast(message) {
+    const toast = document.getElementById('toastMessage');
+    toast.textContent = message;
+    toast.classList.add('show');
+    if (toastTimeout) clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => toast.classList.remove('show'), 2000);
+}
+</script>
+</body>
+</html>

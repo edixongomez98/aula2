@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Español y Filosofía - Unidad 1: Comprensión Lectora | Aula Virtual</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, 'Segoe UI', 'Inter', -apple-system, sans-serif; }
+        body { background: linear-gradient(145deg, #000000 0%, #044756 100%); min-height: 100vh; padding: 2rem; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        .unidad-card { background: rgba(255, 255, 255, 0.95); border-radius: 2rem; padding: 2.5rem; box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.3); backdrop-filter: blur(2px); }
+        .unidad-header { text-align: center; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 2px dashed #1294db; }
+        .unidad-materia { display: inline-block; background: linear-gradient(135deg, #1e3e5c, #2c4863); color: white; padding: 0.3rem 1.2rem; border-radius: 30px; font-size: 0.85rem; font-weight: 500; margin-bottom: 1rem; }
+        .unidad-titulo-principal { font-size: 2.2rem; font-weight: 800; background: linear-gradient(120deg, #030b10, #1294db); background-clip: text; -webkit-background-clip: text; color: transparent; margin-bottom: 0.5rem; }
+        .unidad-subtitulo { color: #5e7f97; font-size: 1rem; }
+        .nav-unidades { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; }
+        .nav-btn { background: #ecf3f9; padding: 0.6rem 1.2rem; border-radius: 40px; text-decoration: none; color: #1f3e54; font-weight: 500; transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.5rem; border: 1px solid #cbdde9; }
+        .nav-btn:hover { background: #dfe9f2; transform: translateX(-3px); }
+        .nav-btn-right:hover { transform: translateX(3px); }
+        .nav-indicador { font-size: 0.85rem; color: #5e7f97; background: rgba(18, 148, 219, 0.1); padding: 0.4rem 1rem; border-radius: 30px; }
+        .contenido { margin: 2rem 0; }
+        .contenido h2 { color: #1f3e54; margin: 1.5rem 0 1rem; font-size: 1.5rem; border-left: 4px solid #1294db; padding-left: 1rem; }
+        .contenido h3 { color: #2c6280; margin: 1rem 0 0.5rem; font-size: 1.2rem; }
+        .contenido p { color: #2c3e50; line-height: 1.6; margin-bottom: 1rem; }
+        .enlaces-box { background: rgba(18, 148, 219, 0.08); border-radius: 1rem; padding: 1.2rem; margin: 1.5rem 0; border-left: 3px solid #1294db; }
+        .enlaces-box h4 { color: #1f3e54; margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem; }
+        .enlace { display: block; margin: 0.5rem 0; color: #1294db; text-decoration: none; }
+        .actividad-box { background: linear-gradient(135deg, #f0f7fc, #e8f0f6); border-radius: 1rem; padding: 1.5rem; margin: 1.5rem 0; border: 1px solid #cbdde9; }
+        .actividad-box h4 { color: #1f3e54; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .entrega-trabajo { background: linear-gradient(135deg, #fff8e7, #fff4e0); border-radius: 1.5rem; padding: 1.8rem; margin: 2rem 0; border: 2px solid #ffc107; }
+        .entrega-trabajo h4 { color: #b8860b; font-size: 1.3rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.8rem; }
+        .form-group { margin-bottom: 1.2rem; }
+        .form-group label { display: block; font-weight: 600; color: #1f3e54; margin-bottom: 0.5rem; }
+        .form-group input { width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 0.8rem; font-size: 1rem; }
+        .toggle-opciones { display: flex; gap: 1rem; margin-bottom: 1rem; background: rgba(255, 193, 7, 0.1); padding: 0.5rem; border-radius: 3rem; }
+        .toggle-btn { flex: 1; text-align: center; padding: 0.6rem; border-radius: 2rem; cursor: pointer; font-weight: 500; background: white; border: 1px solid #ffc107; color: #b8860b; }
+        .toggle-btn.active { background: linear-gradient(105deg, #ff9800, #ffc107); color: #1f3e54; border: none; }
+        .file-input-wrapper { position: relative; display: inline-block; width: 100%; }
+        .file-input-wrapper input[type="file"] { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
+        .file-input-label { display: flex; align-items: center; justify-content: center; gap: 0.8rem; background: white; border: 2px dashed #ffc107; border-radius: 0.8rem; padding: 1.2rem; cursor: pointer; color: #b8860b; font-weight: 500; }
+        .file-name { margin-top: 0.5rem; font-size: 0.85rem; color: #5e7f97; }
+        .link-input { width: 100%; padding: 0.8rem; border: 2px solid #ffc107; border-radius: 0.8rem; font-size: 1rem; }
+        .oculto { display: none; }
+        .btn-entregar { background: linear-gradient(105deg, #ff9800, #ffc107); border: none; padding: 0.8rem 1.8rem; font-size: 1rem; font-weight: 600; border-radius: 40px; color: #1f3e54; cursor: pointer; width: 100%; margin-top: 0.5rem; }
+        .btn-entregar:hover { transform: translateY(-2px); }
+        .mensaje-exito { background: #d4edda; color: #155724; padding: 1rem; border-radius: 0.8rem; margin-top: 1rem; display: none; border-left: 4px solid #28a745; }
+        .mensaje-error { background: #f8d7da; color: #721c24; padding: 1rem; border-radius: 0.8rem; margin-top: 1rem; display: none; border-left: 4px solid #dc3545; }
+        .btn-volver { display: inline-flex; align-items: center; gap: 0.5rem; background: linear-gradient(105deg, #1e3e5c, #2c4863); color: white; padding: 0.8rem 1.8rem; border-radius: 40px; text-decoration: none; font-weight: 500; margin-top: 1rem; }
+        @media (max-width: 700px) { body { padding: 1rem; } .unidad-card { padding: 1.5rem; } .unidad-titulo-principal { font-size: 1.5rem; } .nav-unidades { flex-direction: column; } }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="unidad-card">
+        <div class="unidad-header">
+            <span class="unidad-materia" id="materiaNombre">📖 Español y Filosofía</span>
+            <h1 class="unidad-titulo-principal" id="unidadTitulo">Unidad 1: Comprensión Lectora</h1>
+            <p class="unidad-subtitulo" id="unidadDescripcion">Técnicas de lectura y análisis de textos</p>
+        </div>
+
+        <div class="nav-unidades" id="navUnidades"></div>
+
+        <div class="contenido">
+            <h2>📌 Introducción</h2>
+            <p>Bienvenido a la Unidad 1 de Español y Filosofía. Aquí aprenderás técnicas de comprensión lectora.</p>
+            <h2>📖 Contenido Principal</h2>
+            <p>Desarrolla aquí el contenido principal de la unidad.</p>
+        </div>
+
+        <div class="enlaces-box">
+            <h4>🔗 Enlaces de interés</h4>
+            <a href="#" class="enlace" target="_blank">📘 Recurso 1</a>
+        </div>
+
+        <div class="actividad-box">
+            <h4>✍️ Actividad de la unidad</h4>
+            <p>Completa el formulario abajo con tu nombre y adjunta tu trabajo (PDF o enlace).</p>
+        </div>
+
+        <!-- FORMULARIO - SOLO GUARDA EN GOOGLE SHEETS -->
+        <div class="entrega-trabajo">
+            <h4>📤 Entregar trabajo - Unidad <span id="unidadNumeroMostrar">1</span></h4>
+            
+            <form id="formEntregaDrive">
+                <div class="form-group">
+                    <label>👤 Nombre completo del estudiante *</label>
+                    <input type="text" id="nombreEstudianteDrive" required placeholder="Ej: María Pérez González">
+                </div>
+                
+                <div class="toggle-opciones">
+                    <div class="toggle-btn active" data-opcion="pdf">📄 Subir archivo PDF</div>
+                    <div class="toggle-btn" data-opcion="link">🔗 Pegar enlace</div>
+                </div>
+                
+                <div id="opcionPDFDrive" class="opcion-entrega">
+                    <div class="file-input-wrapper">
+                        <div class="file-input-label" id="fileLabelDrive">📄 Seleccionar archivo PDF</div>
+                        <input type="file" id="archivoPDFDrive" accept=".pdf">
+                    </div>
+                    <div class="file-name" id="fileNameDrive">Ningún archivo seleccionado</div>
+                </div>
+                
+                <div id="opcionLinkDrive" class="opcion-entrega oculto">
+                    <input type="url" id="enlaceTrabajoDrive" class="link-input" placeholder="https://...">
+                </div>
+                
+                <button type="submit" class="btn-entregar" id="btnEntregarDrive">📤 Enviar trabajo</button>
+            </form>
+            
+            <div id="mensajeExitoDrive" class="mensaje-exito">✅ ¡Trabajo enviado a Google Sheets!</div>
+            <div id="mensajeErrorDrive" class="mensaje-error"></div>
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="detalle-curso.html?id=1" class="btn-volver" id="btnVolverLink">⬅️ Volver al curso</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // =============================================
+    // CONFIGURACIÓN - WEB APP URL
+    // =============================================
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyozzuoK3qcvNPJ_Tcz6scpEJ1cDHVZ7L9X6KRe5LcZcjmwxhApPoKj-DZ0YRHnD7I/exec';
+
+    // =============================================
+    // IDENTIFICAR LA MATERIA Y UNIDAD ACTUAL
+    // =============================================
+    const pathName = window.location.pathname;
+    const fileName = pathName.split('/').pop();
+    const match = fileName.match(/unidad(\d+)-(\d+)\.html/);
+    
+    let materiaId = 1;
+    let unidadNum = 1;
+    
+    if (match) {
+        materiaId = parseInt(match[1]);
+        unidadNum = parseInt(match[2]);
+    }
+    
+    const materias = {
+        1: { nombre: "📖 Español y Filosofía", id: 1 },
+        2: { nombre: "🧮 Matemáticas", id: 2 },
+        3: { nombre: "🌍 Sociales", id: 3 },
+        4: { nombre: "⚡ Física", id: 4 },
+        5: { nombre: "🧪 Química", id: 5 },
+        6: { nombre: "🇬🇧 Inglés", id: 6 },
+        7: { nombre: "🧬 Biología", id: 7 }
+    };
+    
+    const unidadesTitulos = {
+        1: { 1: "Comprensión Lectora", 2: "Gramática Española", 3: "Introducción a la Filosofía", 4: "Ética y Valores" },
+        2: { 1: "Números y Operaciones", 2: "Álgebra Básica", 3: "Geometría", 4: "Estadística" },
+        3: { 1: "Historia Universal", 2: "Geografía Mundial", 3: "Historia de Colombia", 4: "Democracia y Participación" },
+        4: { 1: "Cinemática", 2: "Dinámica", 3: "Energía y Trabajo", 4: "Electricidad Básica" },
+        5: { 1: "Estructura Atómica", 2: "Tabla Periódica", 3: "Reacciones Químicas", 4: "Química en la Vida" },
+        6: { 1: "Greetings & Basics", 2: "Present Simple", 3: "Everyday Activities", 4: "Travel & Culture" },
+        7: { 1: "La Célula", 2: "Reinos de la Naturaleza", 3: "Cuerpo Humano", 4: "Ecología" }
+    };
+    
+    const unidadesDescripciones = {
+        1: ["Técnicas de lectura", "Reglas ortográficas", "Grandes pensadores", "Reflexión moral"],
+        2: ["Propiedades y operaciones", "Ecuaciones algebraicas", "Figuras geométricas", "Gráficos estadísticos"],
+        3: ["Grandes civilizaciones", "Mapas mundiales", "Historia de Colombia", "Derechos ciudadanos"],
+        4: ["Movimiento y velocidad", "Fuerzas de Newton", "Tipos de energía", "Circuitos eléctricos"],
+        5: ["Átomos y moléculas", "Elementos periódicos", "Reacciones químicas", "Química cotidiana"],
+        6: ["Saludos básicos", "Presente simple", "Actividades diarias", "Viajes y cultura"],
+        7: ["La célula", "Reinos naturales", "Cuerpo humano", "Ecología"]
+    };
+    
+    const materia = materias[materiaId];
+    const unidadTitulo = unidadesTitulos[materiaId]?.[unidadNum] || `Unidad ${unidadNum}`;
+    const unidadDescripcion = unidadesDescripciones[materiaId]?.[unidadNum - 1] || "Aprende los fundamentos";
+    
+    if (materia) {
+        document.getElementById('materiaNombre').textContent = materia.nombre;
+        document.getElementById('unidadTitulo').innerHTML = `Unidad ${unidadNum}: ${unidadTitulo}`;
+        document.getElementById('unidadDescripcion').textContent = unidadDescripcion;
+        document.title = `${materia.nombre} - Unidad ${unidadNum}: ${unidadTitulo} | Aula Virtual`;
+        document.getElementById('unidadNumeroMostrar').textContent = unidadNum;
+        
+        const btnVolver = document.getElementById('btnVolverLink');
+        if (btnVolver) btnVolver.href = `detalle-curso.html?id=${materiaId}`;
+    }
+    
+    function generarNavegacion() {
+        const navContainer = document.getElementById('navUnidades');
+        if (!navContainer) return;
+        let html = '';
+        if (unidadNum > 1) html += `<a href="unidad${materiaId}-${unidadNum - 1}.html" class="nav-btn">⬅️ Unidad ${unidadNum - 1}</a>`;
+        else html += `<span class="nav-btn" style="opacity:0.5;">⬅️ Unidad anterior</span>`;
+        html += `<span class="nav-indicador">📚 Unidad ${unidadNum} de 4</span>`;
+        if (unidadNum < 4) html += `<a href="unidad${materiaId}-${unidadNum + 1}.html" class="nav-btn nav-btn-right">Unidad ${unidadNum + 1} ➡️</a>`;
+        else html += `<span class="nav-btn" style="opacity:0.5;">Unidad siguiente ➡️</span>`;
+        navContainer.innerHTML = html;
+    }
+    
+    // =============================================
+    // FUNCIÓN PARA LEER PDF COMO BASE64
+    // =============================================
+    function leerArchivoComoBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+    }
+    
+    // =============================================
+    // FORMULARIO - SOLO GUARDA EN GOOGLE SHEETS
+    // =============================================
+    
+    let opcionActual = 'pdf';
+    
+    const toggleBtns = document.querySelectorAll('.toggle-btn');
+    const opcionPDF = document.getElementById('opcionPDFDrive');
+    const opcionLink = document.getElementById('opcionLinkDrive');
+    const fileInput = document.getElementById('archivoPDFDrive');
+    const fileNameSpan = document.getElementById('fileNameDrive');
+    const linkInput = document.getElementById('enlaceTrabajoDrive');
+    
+    if (toggleBtns.length) {
+        toggleBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                toggleBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                opcionActual = this.dataset.opcion;
+                if (opcionActual === 'pdf') {
+                    opcionPDF.classList.remove('oculto');
+                    opcionLink.classList.add('oculto');
+                } else {
+                    opcionPDF.classList.add('oculto');
+                    opcionLink.classList.remove('oculto');
+                }
+            });
+        });
+    }
+    
+    if (fileInput) {
+        fileInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                fileNameSpan.textContent = `📄 ${this.files[0].name} (${(this.files[0].size / 1024).toFixed(1)} KB)`;
+                document.getElementById('fileLabelDrive').innerHTML = '✅ Archivo seleccionado';
+            } else {
+                fileNameSpan.textContent = 'Ningún archivo seleccionado';
+                document.getElementById('fileLabelDrive').innerHTML = '📄 Seleccionar archivo PDF';
+            }
+        });
+    }
+    
+    const form = document.getElementById('formEntregaDrive');
+    if (form) {
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const nombre = document.getElementById('nombreEstudianteDrive').value.trim();
+            const exitoDiv = document.getElementById('mensajeExitoDrive');
+            const errorDiv = document.getElementById('mensajeErrorDrive');
+            const btn = document.getElementById('btnEntregarDrive');
+            
+            if (!nombre) {
+                errorDiv.textContent = '❌ Ingresa tu nombre';
+                errorDiv.style.display = 'block';
+                setTimeout(() => errorDiv.style.display = 'none', 4000);
+                return;
+            }
+            
+            let trabajoData = {
+                fecha: new Date().toLocaleString(),
+                estudiante: nombre,
+                materia: materias[materiaId]?.nombre || 'Materia',
+                unidad: unidadNum,
+                tituloUnidad: unidadTitulo,
+                tipoEntrega: opcionActual
+            };
+            
+            if (opcionActual === 'pdf') {
+                const archivo = fileInput.files[0];
+                if (!archivo) {
+                    errorDiv.textContent = '❌ Selecciona un PDF';
+                    errorDiv.style.display = 'block';
+                    setTimeout(() => errorDiv.style.display = 'none', 4000);
+                    return;
+                }
+                if (archivo.type !== 'application/pdf') {
+                    errorDiv.textContent = '❌ Solo PDF';
+                    errorDiv.style.display = 'block';
+                    setTimeout(() => errorDiv.style.display = 'none', 4000);
+                    return;
+                }
+                trabajoData.archivoNombre = archivo.name;
+                trabajoData.pdfBase64 = await leerArchivoComoBase64(archivo);
+            } else {
+                const enlace = linkInput.value.trim();
+                if (!enlace) {
+                    errorDiv.textContent = '❌ Pega el enlace';
+                    errorDiv.style.display = 'block';
+                    setTimeout(() => errorDiv.style.display = 'none', 4000);
+                    return;
+                }
+                if (!enlace.startsWith('http')) {
+                    errorDiv.textContent = '❌ El enlace debe comenzar con http:// o https://';
+                    errorDiv.style.display = 'block';
+                    setTimeout(() => errorDiv.style.display = 'none', 4000);
+                    return;
+                }
+                trabajoData.enlace = enlace;
+            }
+            
+            btn.disabled = true;
+            btn.textContent = '⏳ Enviando...';
+            
+            try {
+                // Enviar a Google Sheets
+                await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(trabajoData)
+                });
+                
+                exitoDiv.style.display = 'block';
+                
+                setTimeout(() => {
+                    form.reset();
+                    if (fileNameSpan) fileNameSpan.textContent = 'Ningún archivo seleccionado';
+                    if (document.getElementById('fileLabelDrive')) document.getElementById('fileLabelDrive').innerHTML = '📄 Seleccionar archivo PDF';
+                    if (linkInput) linkInput.value = '';
+                    btn.disabled = false;
+                    btn.textContent = '📤 Enviar trabajo';
+                    setTimeout(() => exitoDiv.style.display = 'none', 5000);
+                }, 2000);
+                
+            } catch (error) {
+                errorDiv.textContent = `❌ Error: ${error.message}`;
+                errorDiv.style.display = 'block';
+                btn.disabled = false;
+                btn.textContent = '📤 Enviar trabajo';
+                setTimeout(() => errorDiv.style.display = 'none', 5000);
+            }
+        });
+    }
+    
+    generarNavegacion();
+</script>
+</body>
+</html>

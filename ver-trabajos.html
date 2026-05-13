@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel del Profesor - Aula Virtual</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui; }
+        body { background: linear-gradient(145deg, #000000 0%, #044756 100%); min-height: 100vh; padding: 2rem; }
+        .container { max-width: 1400px; margin: 0 auto; }
+        .panel-card { background: rgba(255, 255, 255, 0.95); border-radius: 2rem; padding: 2rem; box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.3); }
+        h1 { font-size: 2rem; font-weight: 800; background: linear-gradient(120deg, #030b10, #1294db); background-clip: text; -webkit-background-clip: text; color: transparent; }
+        .subtitulo { color: #5e7f97; margin-bottom: 1.5rem; border-bottom: 2px dashed #1294db; padding-bottom: 0.5rem; }
+        .resumen-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+        .resumen-card { background: linear-gradient(135deg, #f0f7fc, #e8f0f6); border-radius: 1rem; padding: 1rem; text-align: center; }
+        .resumen-card .numero { font-size: 2rem; font-weight: 800; color: #1294db; }
+        .resumen-card .label { color: #5e7f97; font-size: 0.8rem; }
+        .botones { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-bottom: 1.5rem; }
+        .btn { padding: 0.7rem 1.5rem; border: none; border-radius: 2rem; cursor: pointer; font-weight: 500; transition: all 0.2s; }
+        .btn-primary { background: #1e3e5c; color: white; }
+        .btn-primary:hover { background: #2c4863; transform: translateY(-2px); }
+        .btn-success { background: #28a745; color: white; }
+        .btn-success:hover { background: #218838; transform: translateY(-2px); }
+        .btn-info { background: #17a2b8; color: white; }
+        .btn-info:hover { background: #138496; transform: translateY(-2px); }
+        .tabla-container { overflow-x: auto; margin-top: 1rem; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        th, td { border: 1px solid #ddd; padding: 0.8rem; text-align: left; vertical-align: middle; }
+        th { background: #1e3e5c; color: white; }
+        tr:nth-child(even) { background: #f9f9f9; }
+        .calificacion { width: 70px; padding: 0.3rem; border: 1px solid #ddd; border-radius: 0.3rem; }
+        .aprobado { background: #d4edda !important; }
+        .reprobado { background: #f8d7da !important; }
+        .empty-message { text-align: center; padding: 2rem; color: #5e7f97; }
+        @media (max-width: 700px) { body { padding: 1rem; } th, td { padding: 0.4rem; font-size: 0.7rem; } }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="panel-card">
+        <h1>📋 Panel del Profesor</h1>
+        <div class="subtitulo">Trabajos entregados - Google Sheets</div>
+
+        <div class="resumen-grid">
+            <div class="resumen-card"><div class="numero" id="totalEntregas">0</div><div class="label">Total</div></div>
+            <div class="resumen-card"><div class="numero" id="totalPendientes">0</div><div class="label">Pendientes</div></div>
+            <div class="resumen-card"><div class="numero" id="totalAprobados">0</div><div class="label">Aprobados</div></div>
+            <div class="resumen-card"><div class="numero" id="totalReprobados">0</div><div class="label">Reprobados</div></div>
+        </div>
+
+        <div class="botones">
+            <button class="btn btn-primary" onclick="cargarTrabajos()">🔄 Actualizar</button>
+            <button class="btn btn-info" onclick="window.open('https://docs.google.com/spreadsheets/d/1wH9mQE8brUXk-IaSgZ9WTdrB0aD0zv-6JMdMoT1PmVs/edit', '_blank')">📊 Abrir Hoja</button>
+            <button class="btn btn-info" onclick="window.open('https://drive.google.com/drive/folders/1AROdXBhSKb7yG_Gtie4p9-5ZWZmUobvj', '_blank')">📁 Abrir Drive</button>
+            <button class="btn btn-success" onclick="exportarCSV()">📊 Exportar CSV</button>
+        </div>
+
+        <div id="tablaContainer" class="empty-message">🔄 Cargando trabajos desde Google Sheets...</div>
+    </div>
+</div>
+
+<script>
+// ============================================
+// ID DE LA HOJA DE CÁLCULO
+// ============================================
+const SHEET_ID = '1wH9mQE8brUXk-IaSgZ9WTdrB0aD0zv-6JMdMoT1PmVs';
+const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
+
+let trabajos = [];
+let calificaciones = JSON.parse(localStorage.getItem('calificaciones_profesor') || '{}');
+
+async function cargarTrabajos() {
+    const container = document.getElementById('tablaContainer');
+    container.innerHTML = '<div class="empty-message">🔄 Cargando trabajos desde Google Sheets...</div>';
+    
+    try {
+        // Leer datos directamente de la hoja de cálculo (pública)
+        const response = await fetch(SHEET_URL);
+        const texto = await response.text();
+        
+        // Parsear la respuesta JSONP
+        const jsonString = texto.substring(texto.indexOf('{'), texto.lastIndexOf('}') + 1);
+        const data = JSON.parse(jsonString);
+        
+        // Extraer los datos de la tabla
+        const filas = data.table.rows;
+        const columnas = data.table.cols.map(col => col.label);
+        
+        trabajos = [];
+        
+        for (let i = 1; i < filas.length; i++) {
+            const fila = filas[i];
+            if (!fila.c || !fila.c[0] || !fila.c[0].v) continue;
+            
+            const trabajo = {};
+            columnas.forEach((col, idx) => {
+                if (fila.c && fila.c[idx]) {
+                    trabajo[col] = fila.c[idx].v;
+                } else {
+                    trabajo[col] = '';
+                }
+            });
+            trabajos.push(trabajo);
+        }
+        
+        if (trabajos.length === 0) {
+            container.innerHTML = '<div class="empty-message">📭 No hay trabajos entregados aún.<br><br>Los estudiantes deben enviar trabajos desde las unidades del curso.</div>';
+            actualizarResumen();
+            return;
+        }
+        
+        actualizarResumen();
+        mostrarTabla();
+        
+    } catch (error) {
+        console.error('Error:', error);
+        container.innerHTML = `<div class="empty-message">❌ Error al cargar: ${error.message}<br><br>
+        💡 Solución: Asegúrate que tu hoja de cálculo sea pública.<br>
+        Ve a tu hoja → "Compartir" → "Cualquier persona con el enlace puede ver"</div>`;
+    }
+}
+
+function actualizarResumen() {
+    let pendientes = 0, aprobados = 0, reprobados = 0;
+    trabajos.forEach((_, i) => {
+        const nota = calificaciones[i]?.nota || '';
+        if (nota >= 60) aprobados++;
+        else if (nota) reprobados++;
+        else pendientes++;
+    });
+    document.getElementById('totalEntregas').textContent = trabajos.length;
+    document.getElementById('totalPendientes').textContent = pendientes;
+    document.getElementById('totalAprobados').textContent = aprobados;
+    document.getElementById('totalReprobados').textContent = reprobados;
+}
+
+function mostrarTabla() {
+    let html = `<table><thead><tr><th>📅 Fecha</th><th>👤 Estudiante</th><th>📚 Materia</th><th>🔢 Unidad</th><th>📖 Título</th><th>📎 Trabajo</th><th>⭐ Nota</th><th>📝 Estado</th><th>⚡</th></tr></thead><tbody>`;
+    
+    trabajos.forEach((t, i) => {
+        const nota = calificaciones[i]?.nota || '';
+        const clase = nota >= 60 ? 'aprobado' : (nota ? 'reprobado' : '');
+        const estado = nota >= 60 ? '✅ Aprobado' : (nota ? '❌ Reprobado' : '⏳ Pendiente');
+        
+        // Determinar el enlace del trabajo
+        let trabajoHtml = '';
+        const urlArchivo = t['URL Archivo'] || t.URL_Archivo || '';
+        const archivoEnlace = t['Archivo/Enlace'] || '';
+        
+        if (urlArchivo && urlArchivo.startsWith('http')) {
+            trabajoHtml = `<a href="${urlArchivo}" target="_blank" style="color:#1294db">📄 Ver Archivo</a>`;
+        } else if (archivoEnlace && archivoEnlace.startsWith('http')) {
+            trabajoHtml = `<a href="${archivoEnlace}" target="_blank" style="color:#1294db">🔗 Abrir Enlace</a>`;
+        } else {
+            trabajoHtml = `📄 ${archivoEnlace || 'Archivo'}`;
+        }
+        
+        html += `<tr class="${clase}">
+            <td>${t.Fecha || '-'}</td>
+            <td>${t.Estudiante || '-'}</td>
+            <td>${t.Materia || '-'}</td>
+            <td>${t.Unidad || '-'}</td>
+            <td>${t['Titulo Unidad'] || '-'}</td>
+            <td>${trabajoHtml}</td>
+            <td><input type="number" id="nota_${i}" class="calificacion" value="${nota}" min="0" max="100" step="5"></td>
+            <td id="estado_${i}">${estado}</td>
+            <td><button onclick="guardarNota(${i})" style="background:#28a745;color:white;border:none;padding:0.3rem 0.8rem;border-radius:0.3rem;cursor:pointer">💾</button></td>
+        </tr>`;
+    });
+    
+    html += '</tbody></table>';
+    document.getElementById('tablaContainer').innerHTML = html;
+}
+
+function guardarNota(index) {
+    const nota = document.getElementById(`nota_${index}`).value;
+    calificaciones[index] = { nota: nota, fecha: new Date().toLocaleString() };
+    localStorage.setItem('calificaciones_profesor', JSON.stringify(calificaciones));
+    
+    const estadoSpan = document.getElementById(`estado_${index}`);
+    estadoSpan.innerHTML = nota >= 60 ? '✅ Aprobado' : (nota ? '❌ Reprobado' : '⏳ Pendiente');
+    actualizarResumen();
+    alert(`✅ Nota ${nota} guardada`);
+}
+
+function exportarCSV() {
+    if (!trabajos.length) { alert('No hay datos'); return; }
+    let csv = "Fecha,Estudiante,Materia,Unidad,Título,Archivo,Nota\n";
+    trabajos.forEach((t, i) => {
+        const nota = calificaciones[i]?.nota || '';
+        const archivo = t['URL Archivo'] || t['Archivo/Enlace'] || '';
+        csv += `"${t.Fecha || ''}","${t.Estudiante || ''}","${t.Materia || ''}","${t.Unidad || ''}","${t['Titulo Unidad'] || ''}","${archivo}","${nota}"\n`;
+    });
+    const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `trabajos_${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    alert('✅ Exportado');
+}
+
+// Cargar al inicio
+cargarTrabajos();
+</script>
+</body>
+</html>
